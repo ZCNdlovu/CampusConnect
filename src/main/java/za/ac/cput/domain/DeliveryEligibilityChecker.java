@@ -1,59 +1,121 @@
 package za.ac.cput.domain;
 
-import java.util.List;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
+@Entity
 public class DeliveryEligibilityChecker {
+    @Id
     private Long checkerId;
-    private List<String> eligibleResidences;
-    private List<String> eligiblePrivateAccommodations;
-    private double maxDeliveryRadiusKm;
+    private String studentNumber;
+    private String address;
+    private boolean isEligible;
+    private LocalDateTime checkDate;
+    private String notes;
+
+    @Enumerated(EnumType.STRING)
+    private AccommodationType accommodationType;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryEligibility eligibilityResult;
 
     protected DeliveryEligibilityChecker() {}
 
     private DeliveryEligibilityChecker(Builder builder) {
         this.checkerId = builder.checkerId;
-        this.eligibleResidences = builder.eligibleResidences;
-        this.eligiblePrivateAccommodations = builder.eligiblePrivateAccommodations;
-        this.maxDeliveryRadiusKm = builder.maxDeliveryRadiusKm;
+        this.studentNumber = builder.studentNumber;
+        this.address = builder.address;
+        this.isEligible = builder.isEligible;
+        this.checkDate = builder.checkDate;
+        this.notes = builder.notes;
+        this.accommodationType = builder.accommodationType;
+        this.eligibilityResult = builder.eligibilityResult;
     }
 
     // Getters
     public Long getCheckerId() { return checkerId; }
-    public List<String> getEligibleResidences() { return eligibleResidences; }
-    public List<String> getEligiblePrivateAccommodations() { return eligiblePrivateAccommodations; }
-    public double getMaxDeliveryRadiusKm() { return maxDeliveryRadiusKm; }
-
-
+    public String getStudentNumber() { return studentNumber; }
+    public String getAddress() { return address; }
+    public boolean isEligible() { return isEligible; }
+    public LocalDateTime getCheckDate() { return checkDate; }
+    public String getNotes() { return notes; }
+    public AccommodationType getAccommodationType() { return accommodationType; }
+    public DeliveryEligibility getEligibilityResult() { return eligibilityResult; }
 
     @Override
     public String toString() {
         return "DeliveryEligibilityChecker{" +
                 "checkerId=" + checkerId +
-                ", maxDeliveryRadiusKm=" + maxDeliveryRadiusKm +
+                ", studentNumber='" + studentNumber + '\'' +
+                ", isEligible=" + isEligible +
+                ", eligibilityResult=" + eligibilityResult +
                 '}';
     }
 
     public static class Builder {
         private Long checkerId;
-        private List<String> eligibleResidences;
-        private List<String> eligiblePrivateAccommodations;
-        private double maxDeliveryRadiusKm;
+        private String studentNumber;
+        private String address;
+        private boolean isEligible = false;
+        private LocalDateTime checkDate = LocalDateTime.now();
+        private String notes;
+        private AccommodationType accommodationType;
+        private DeliveryEligibility eligibilityResult = DeliveryEligibility.NOT_ELIGIBLE;
 
-        public Builder setCheckerId(Long checkerId) { this.checkerId = checkerId; return this; }
-        public Builder setEligibleResidences(List<String> eligibleResidences) { this.eligibleResidences = eligibleResidences; return this; }
-        public Builder setEligiblePrivateAccommodations(List<String> eligiblePrivateAccommodations) {
-            this.eligiblePrivateAccommodations = eligiblePrivateAccommodations;
+        public Builder setCheckerId(Long checkerId) {
+            this.checkerId = checkerId;
             return this;
         }
-        public Builder setMaxDeliveryRadiusKm(double maxDeliveryRadiusKm) { this.maxDeliveryRadiusKm = maxDeliveryRadiusKm; return this; }
 
-        public Builder copy(DeliveryEligibilityChecker deliveryEligibilityChecker){
-            this.checkerId = deliveryEligibilityChecker.checkerId;
-            this.eligibleResidences = deliveryEligibilityChecker.eligibleResidences;
-            this.eligiblePrivateAccommodations = deliveryEligibilityChecker.eligiblePrivateAccommodations;
-            this.maxDeliveryRadiusKm = deliveryEligibilityChecker.maxDeliveryRadiusKm;
+        public Builder setStudentNumber(String studentNumber) {
+            this.studentNumber = studentNumber;
             return this;
         }
-        public DeliveryEligibilityChecker build() { return new DeliveryEligibilityChecker(this); }
+
+        public Builder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder setIsEligible(boolean isEligible) {
+            this.isEligible = isEligible;
+            return this;
+        }
+
+        public Builder setCheckDate(LocalDateTime checkDate) {
+            this.checkDate = checkDate;
+            return this;
+        }
+
+        public Builder setNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public Builder setAccommodationType(AccommodationType accommodationType) {
+            this.accommodationType = accommodationType;
+            return this;
+        }
+
+        public Builder setEligibilityResult(DeliveryEligibility eligibilityResult) {
+            this.eligibilityResult = eligibilityResult;
+            return this;
+        }
+
+        public Builder copy(DeliveryEligibilityChecker checker) {
+            this.checkerId = checker.checkerId;
+            this.studentNumber = checker.studentNumber;
+            this.address = checker.address;
+            this.isEligible = checker.isEligible;
+            this.checkDate = checker.checkDate;
+            this.notes = checker.notes;
+            this.accommodationType = checker.accommodationType;
+            this.eligibilityResult = checker.eligibilityResult;
+            return this;
+        }
+
+        public DeliveryEligibilityChecker build() {
+            return new DeliveryEligibilityChecker(this);
+        }
     }
 }

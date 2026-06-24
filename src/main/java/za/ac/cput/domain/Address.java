@@ -1,8 +1,11 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Address {
+    @Id
     private Long addressId;
-    private Long studentId;
     private String addressType;
     private String streetNumber;
     private String streetName;
@@ -13,11 +16,14 @@ public class Address {
     private String postalCode;
     private boolean isDefault;
 
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
     protected Address() {}
 
     private Address(Builder builder) {
         this.addressId = builder.addressId;
-        this.studentId = builder.studentId;
         this.addressType = builder.addressType;
         this.streetNumber = builder.streetNumber;
         this.streetName = builder.streetName;
@@ -27,11 +33,11 @@ public class Address {
         this.country = builder.country;
         this.postalCode = builder.postalCode;
         this.isDefault = builder.isDefault;
+        this.student = builder.student;
     }
 
     // Getters
     public Long getAddressId() { return addressId; }
-    public Long getStudentId() { return studentId; }
     public String getAddressType() { return addressType; }
     public String getStreetNumber() { return streetNumber; }
     public String getStreetName() { return streetName; }
@@ -41,25 +47,25 @@ public class Address {
     public String getCountry() { return country; }
     public String getPostalCode() { return postalCode; }
     public boolean isDefault() { return isDefault; }
+    public Student getStudent() { return student; }
 
-
+    public String getFullAddress() {
+        return String.format("%s %s, %s, %s, %s, %s",
+                streetNumber, streetName, suburb, city, province, postalCode);
+    }
 
     @Override
     public String toString() {
         return "Address{" +
                 "addressId=" + addressId +
-                ", streetNumber='" + streetNumber + '\'' +
-                ", streetName='" + streetName + '\'' +
-                ", suburb='" + suburb + '\'' +
-                ", city='" + city + '\'' +
-                ", province='" + province + '\'' +
-                ", postalCode='" + postalCode + '\'' +
+                ", addressType='" + addressType + '\'' +
+                ", fullAddress='" + getFullAddress() + '\'' +
+                ", isDefault=" + isDefault +
                 '}';
     }
 
     public static class Builder {
         private Long addressId;
-        private Long studentId;
         private String addressType;
         private String streetNumber;
         private String streetName;
@@ -69,22 +75,65 @@ public class Address {
         private String country;
         private String postalCode;
         private boolean isDefault;
+        private Student student;
 
-        public Builder setAddressId(Long addressId) { this.addressId = addressId; return this; }
-        public Builder setStudentId(Long studentId) { this.studentId = studentId; return this; }
-        public Builder setAddressType(String addressType) { this.addressType = addressType; return this; }
-        public Builder setStreetNumber(String streetNumber) { this.streetNumber = streetNumber; return this; }
-        public Builder setStreetName(String streetName) { this.streetName = streetName; return this; }
-        public Builder setSuburb(String suburb) { this.suburb = suburb; return this; }
-        public Builder setCity(String city) { this.city = city; return this; }
-        public Builder setProvince(String province) { this.province = province; return this; }
-        public Builder setCountry(String country) { this.country = country; return this; }
-        public Builder setPostalCode(String postalCode) { this.postalCode = postalCode; return this; }
-        public Builder setIsDefault(boolean isDefault) { this.isDefault = isDefault; return this; }
+        public Builder setAddressId(Long addressId) {
+            this.addressId = addressId;
+            return this;
+        }
 
-        public Builder copy(Address address){
+        public Builder setAddressType(String addressType) {
+            this.addressType = addressType;
+            return this;
+        }
+
+        public Builder setStreetNumber(String streetNumber) {
+            this.streetNumber = streetNumber;
+            return this;
+        }
+
+        public Builder setStreetName(String streetName) {
+            this.streetName = streetName;
+            return this;
+        }
+
+        public Builder setSuburb(String suburb) {
+            this.suburb = suburb;
+            return this;
+        }
+
+        public Builder setCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public Builder setProvince(String province) {
+            this.province = province;
+            return this;
+        }
+
+        public Builder setCountry(String country) {
+            this.country = country;
+            return this;
+        }
+
+        public Builder setPostalCode(String postalCode) {
+            this.postalCode = postalCode;
+            return this;
+        }
+
+        public Builder setDefault(boolean isDefault) {
+            this.isDefault = isDefault;
+            return this;
+        }
+
+        public Builder setStudent(Student student) {
+            this.student = student;
+            return this;
+        }
+
+        public Builder copy(Address address) {
             this.addressId = address.addressId;
-            this.studentId = address.studentId;
             this.addressType = address.addressType;
             this.streetNumber = address.streetNumber;
             this.streetName = address.streetName;
@@ -94,9 +143,12 @@ public class Address {
             this.country = address.country;
             this.postalCode = address.postalCode;
             this.isDefault = address.isDefault;
+            this.student = address.student;
             return this;
         }
 
-        public Address build() { return new Address(this); }
+        public Address build() {
+            return new Address(this);
+        }
     }
 }

@@ -1,16 +1,21 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 public class EmailNotification {
+    @Id
     private Long emailId;
     private String recipientEmail;
     private String subject;
     private String body;
-    private String attachmentUrl;
-    private boolean isSent;
     private LocalDateTime sentDate;
-    private String emailType;
+    private boolean isSent;
+    private String attachmentUrl;
+
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
     protected EmailNotification() {}
 
@@ -19,10 +24,10 @@ public class EmailNotification {
         this.recipientEmail = builder.recipientEmail;
         this.subject = builder.subject;
         this.body = builder.body;
-        this.attachmentUrl = builder.attachmentUrl;
-        this.isSent = builder.isSent;
         this.sentDate = builder.sentDate;
-        this.emailType = builder.emailType;
+        this.isSent = builder.isSent;
+        this.attachmentUrl = builder.attachmentUrl;
+        this.notificationType = builder.notificationType;
     }
 
     // Getters
@@ -30,10 +35,15 @@ public class EmailNotification {
     public String getRecipientEmail() { return recipientEmail; }
     public String getSubject() { return subject; }
     public String getBody() { return body; }
-    public String getAttachmentUrl() { return attachmentUrl; }
-    public boolean isSent() { return isSent; }
     public LocalDateTime getSentDate() { return sentDate; }
-    public String getEmailType() { return emailType; }
+    public boolean isSent() { return isSent; }
+    public String getAttachmentUrl() { return attachmentUrl; }
+    public NotificationType getNotificationType() { return notificationType; }
+
+    public void markAsSent() {
+        this.isSent = true;
+        this.sentDate = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {
@@ -50,31 +60,65 @@ public class EmailNotification {
         private String recipientEmail;
         private String subject;
         private String body;
-        private String attachmentUrl;
+        private LocalDateTime sentDate = LocalDateTime.now();
         private boolean isSent = false;
-        private LocalDateTime sentDate;
-        private String emailType;
+        private String attachmentUrl;
+        private NotificationType notificationType;
 
-        public Builder setEmailId(Long emailId) { this.emailId = emailId; return this; }
-        public Builder setRecipientEmail(String recipientEmail) { this.recipientEmail = recipientEmail; return this; }
-        public Builder setSubject(String subject) { this.subject = subject; return this; }
-        public Builder setBody(String body) { this.body = body; return this; }
-        public Builder setAttachmentUrl(String attachmentUrl) { this.attachmentUrl = attachmentUrl; return this; }
-        public Builder setIsSent(boolean isSent) { this.isSent = isSent; return this; }
-        public Builder setSentDate(LocalDateTime sentDate) { this.sentDate = sentDate; return this; }
-        public Builder setEmailType(String emailType) { this.emailType = emailType; return this; }
-
-        public Builder copy(EmailNotification emailNotification){
-            this.emailId = emailNotification.emailId;
-            this.recipientEmail = emailNotification.recipientEmail;
-            this.subject = emailNotification.subject;
-            this.body = emailNotification.body;
-            this.attachmentUrl = emailNotification.attachmentUrl;
-            this.isSent = emailNotification.isSent;
-            this.sentDate = emailNotification.sentDate;
-            this.emailType = emailNotification.emailType;
+        public Builder setEmailId(Long emailId) {
+            this.emailId = emailId;
             return this;
         }
-        public EmailNotification build() { return new EmailNotification(this); }
+
+        public Builder setRecipientEmail(String recipientEmail) {
+            this.recipientEmail = recipientEmail;
+            return this;
+        }
+
+        public Builder setSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public Builder setBody(String body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder setSentDate(LocalDateTime sentDate) {
+            this.sentDate = sentDate;
+            return this;
+        }
+
+        public Builder setIsSent(boolean isSent) {
+            this.isSent = isSent;
+            return this;
+        }
+
+        public Builder setAttachmentUrl(String attachmentUrl) {
+            this.attachmentUrl = attachmentUrl;
+            return this;
+        }
+
+        public Builder setNotificationType(NotificationType notificationType) {
+            this.notificationType = notificationType;
+            return this;
+        }
+
+        public Builder copy(EmailNotification email) {
+            this.emailId = email.emailId;
+            this.recipientEmail = email.recipientEmail;
+            this.subject = email.subject;
+            this.body = email.body;
+            this.sentDate = email.sentDate;
+            this.isSent = email.isSent;
+            this.attachmentUrl = email.attachmentUrl;
+            this.notificationType = email.notificationType;
+            return this;
+        }
+
+        public EmailNotification build() {
+            return new EmailNotification(this);
+        }
     }
 }

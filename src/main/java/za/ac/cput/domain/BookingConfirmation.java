@@ -1,8 +1,11 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 public class BookingConfirmation {
+    @Id
     private String confirmationNumber;
     private String qrCode;
     private LocalDateTime confirmationTime;
@@ -37,18 +40,36 @@ public class BookingConfirmation {
         private LocalDateTime confirmationTime = LocalDateTime.now();
         private String termsAndConditions;
 
-        public Builder setConfirmationNumber(String confirmationNumber) { this.confirmationNumber = confirmationNumber; return this; }
-        public Builder setQrCode(String qrCode) { this.qrCode = qrCode; return this; }
-        public Builder setConfirmationTime(LocalDateTime confirmationTime) { this.confirmationTime = confirmationTime; return this; }
-        public Builder setTermsAndConditions(String termsAndConditions) { this.termsAndConditions = termsAndConditions; return this; }
+        public Builder setConfirmationNumber(String confirmationNumber) {
+            this.confirmationNumber = confirmationNumber;
+            return this;
+        }
 
-        public Builder copy(BookingConfirmation bookingConfirmation){
+        public Builder setQrCode(String qrCode) {
+            this.qrCode = qrCode;
+            return this;
+        }
+
+        public Builder setConfirmationTime(LocalDateTime confirmationTime) {
+            this.confirmationTime = confirmationTime;
+            return this;
+        }
+
+        public Builder setTermsAndConditions(String termsAndConditions) {
+            this.termsAndConditions = termsAndConditions;
+            return this;
+        }
+
+        public Builder copy(BookingConfirmation bookingConfirmation) {
             this.confirmationNumber = bookingConfirmation.confirmationNumber;
             this.qrCode = bookingConfirmation.qrCode;
             this.confirmationTime = bookingConfirmation.confirmationTime;
             this.termsAndConditions = bookingConfirmation.termsAndConditions;
             return this;
         }
-        public BookingConfirmation build() { return new BookingConfirmation(this); }
+
+        public BookingConfirmation build() {
+            return new BookingConfirmation(this);
+        }
     }
 }

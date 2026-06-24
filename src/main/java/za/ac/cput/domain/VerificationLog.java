@@ -1,77 +1,127 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+@Entity
 public class VerificationLog {
+    @Id
     private Long logId;
-    private Long documentId;
-    private Long verifiedBy;
     private LocalDateTime verificationDate;
-    private ApprovalStatus status;
-    private String comments;
-    private List<VerificationLog> history;
+    private String notes;
+    private String verifiedBy;
+
+    @Enumerated(EnumType.STRING)
+    private VerificationStatus previousStatus;
+
+    @Enumerated(EnumType.STRING)
+    private VerificationStatus newStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "document_id")
+    private Document document;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     protected VerificationLog() {}
 
     private VerificationLog(Builder builder) {
         this.logId = builder.logId;
-        this.documentId = builder.documentId;
-        this.verifiedBy = builder.verifiedBy;
         this.verificationDate = builder.verificationDate;
-        this.status = builder.status;
-        this.comments = builder.comments;
-        this.history = builder.history;
+        this.notes = builder.notes;
+        this.verifiedBy = builder.verifiedBy;
+        this.previousStatus = builder.previousStatus;
+        this.newStatus = builder.newStatus;
+        this.document = builder.document;
+        this.student = builder.student;
     }
 
     // Getters
     public Long getLogId() { return logId; }
-    public Long getDocumentId() { return documentId; }
-    public Long getVerifiedBy() { return verifiedBy; }
     public LocalDateTime getVerificationDate() { return verificationDate; }
-    public ApprovalStatus getStatus() { return status; }
-    public String getComments() { return comments; }
-    public List<VerificationLog> getHistory() { return history; }
-
+    public String getNotes() { return notes; }
+    public String getVerifiedBy() { return verifiedBy; }
+    public VerificationStatus getPreviousStatus() { return previousStatus; }
+    public VerificationStatus getNewStatus() { return newStatus; }
+    public Document getDocument() { return document; }
+    public Student getStudent() { return student; }
 
     @Override
     public String toString() {
         return "VerificationLog{" +
                 "logId=" + logId +
-                ", documentId=" + documentId +
-                ", status=" + status +
-                ", verificationDate=" + verificationDate +
+                ", verifiedBy='" + verifiedBy + '\'' +
+                ", previousStatus=" + previousStatus +
+                ", newStatus=" + newStatus +
                 '}';
     }
 
     public static class Builder {
         private Long logId;
-        private Long documentId;
-        private Long verifiedBy;
         private LocalDateTime verificationDate = LocalDateTime.now();
-        private ApprovalStatus status;
-        private String comments;
-        private List<VerificationLog> history;
+        private String notes;
+        private String verifiedBy;
+        private VerificationStatus previousStatus;
+        private VerificationStatus newStatus;
+        private Document document;
+        private Student student;
 
-        public Builder setLogId(Long logId) { this.logId = logId; return this; }
-        public Builder setDocumentId(Long documentId) { this.documentId = documentId; return this; }
-        public Builder setVerifiedBy(Long verifiedBy) { this.verifiedBy = verifiedBy; return this; }
-        public Builder setVerificationDate(LocalDateTime verificationDate) { this.verificationDate = verificationDate; return this; }
-        public Builder setStatus(ApprovalStatus status) { this.status = status; return this; }
-        public Builder setComments(String comments) { this.comments = comments; return this; }
-        public Builder setHistory(List<VerificationLog> history) { this.history = history; return this; }
-
-        public Builder copy(VerificationLog verificationLog){
-            this.logId = verificationLog.logId;
-            this.documentId = verificationLog.documentId;
-            this.verifiedBy = verificationLog.verifiedBy;
-            this.verificationDate = verificationLog.verificationDate;
-            this.status = verificationLog.status;
-            this.comments = verificationLog.comments;
-            this.history = verificationLog.history;
+        public Builder setLogId(Long logId) {
+            this.logId = logId;
             return this;
         }
-        public VerificationLog build() { return new VerificationLog(this); }
+
+        public Builder setVerificationDate(LocalDateTime verificationDate) {
+            this.verificationDate = verificationDate;
+            return this;
+        }
+
+        public Builder setNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public Builder setVerifiedBy(String verifiedBy) {
+            this.verifiedBy = verifiedBy;
+            return this;
+        }
+
+        public Builder setPreviousStatus(VerificationStatus previousStatus) {
+            this.previousStatus = previousStatus;
+            return this;
+        }
+
+        public Builder setNewStatus(VerificationStatus newStatus) {
+            this.newStatus = newStatus;
+            return this;
+        }
+
+        public Builder setDocument(Document document) {
+            this.document = document;
+            return this;
+        }
+
+        public Builder setStudent(Student student) {
+            this.student = student;
+            return this;
+        }
+
+        public Builder copy(VerificationLog log) {
+            this.logId = log.logId;
+            this.verificationDate = log.verificationDate;
+            this.notes = log.notes;
+            this.verifiedBy = log.verifiedBy;
+            this.previousStatus = log.previousStatus;
+            this.newStatus = log.newStatus;
+            this.document = log.document;
+            this.student = log.student;
+            return this;
+        }
+
+        public VerificationLog build() {
+            return new VerificationLog(this);
+        }
     }
 }

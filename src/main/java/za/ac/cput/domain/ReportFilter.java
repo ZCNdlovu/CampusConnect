@@ -1,60 +1,75 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.*;
+
+@Entity
 public class ReportFilter {
+    @Id
     private Long filterId;
-    private String reportId;
-    private String fieldName;
-    private String operator;
-    private String value;
+    private String filterName;
+    private String filterValue;
+    private String filterType;
 
     protected ReportFilter() {}
 
     private ReportFilter(Builder builder) {
         this.filterId = builder.filterId;
-        this.reportId = builder.reportId;
-        this.fieldName = builder.fieldName;
-        this.operator = builder.operator;
-        this.value = builder.value;
+        this.filterName = builder.filterName;
+        this.filterValue = builder.filterValue;
+        this.filterType = builder.filterType;
     }
 
     // Getters
     public Long getFilterId() { return filterId; }
-    public String getReportId() { return reportId; }
-    public String getFieldName() { return fieldName; }
-    public String getOperator() { return operator; }
-    public String getValue() { return value; }
+    public String getFilterName() { return filterName; }
+    public String getFilterValue() { return filterValue; }
+    public String getFilterType() { return filterType; }
 
     @Override
     public String toString() {
         return "ReportFilter{" +
                 "filterId=" + filterId +
-                ", fieldName='" + fieldName + '\'' +
-                ", operator='" + operator + '\'' +
-                ", value='" + value + '\'' +
+                ", filterName='" + filterName + '\'' +
+                ", filterValue='" + filterValue + '\'' +
                 '}';
     }
 
     public static class Builder {
         private Long filterId;
-        private String reportId;
-        private String fieldName;
-        private String operator;
-        private String value;
+        private String filterName;
+        private String filterValue;
+        private String filterType;
 
-        public Builder setFilterId(Long filterId) { this.filterId = filterId; return this; }
-        public Builder setReportId(String reportId) { this.reportId = reportId; return this; }
-        public Builder setFieldName(String fieldName) { this.fieldName = fieldName; return this; }
-        public Builder setOperator(String operator) { this.operator = operator; return this; }
-        public Builder setValue(String value) { this.value = value; return this; }
-
-        public Builder copy(ReportFilter reportFilter){
-            this.filterId = reportFilter.filterId;
-            this.reportId = reportFilter.reportId;
-            this.fieldName = reportFilter.fieldName;
-            this.operator = reportFilter.operator;
-            this.value = reportFilter.value;
+        public Builder setFilterId(Long filterId) {
+            this.filterId = filterId;
             return this;
         }
-        public ReportFilter build() { return new ReportFilter(this); }
+
+        public Builder setFilterName(String filterName) {
+            this.filterName = filterName;
+            return this;
+        }
+
+        public Builder setFilterValue(String filterValue) {
+            this.filterValue = filterValue;
+            return this;
+        }
+
+        public Builder setFilterType(String filterType) {
+            this.filterType = filterType;
+            return this;
+        }
+
+        public Builder copy(ReportFilter filter) {
+            this.filterId = filter.filterId;
+            this.filterName = filter.filterName;
+            this.filterValue = filter.filterValue;
+            this.filterType = filter.filterType;
+            return this;
+        }
+
+        public ReportFilter build() {
+            return new ReportFilter(this);
+        }
     }
 }
